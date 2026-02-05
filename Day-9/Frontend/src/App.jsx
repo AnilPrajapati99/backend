@@ -6,7 +6,7 @@ const App = () => {
   const [notes,setNotes] = useState([])
 
   function getNotes(){
-  axios.get("http://localhost:3000/api/notes").then((res)=>{
+  axios.get("https://backend-1-cdse.onrender.com/api/notes").then((res)=>{
     setNotes(res.data.notes)
   })
   }
@@ -20,7 +20,7 @@ const App = () => {
     const {title,desc} = e.target.elements
     console.log(title.value,desc.value)
 
-    axios.post('http://localhost:3000/api/notes',({
+    axios.post('https://backend-1-cdse.onrender.com/api/notes',({
       title:title.value,
       desc:desc.value
     })).then((res)=>{
@@ -34,7 +34,7 @@ const App = () => {
 
   function deleteNote(noteId){
     console.log(noteId)
-    axios.delete("http://localhost:3000/api/notes/"+noteId).then((res)=>{
+    axios.delete("https://backend-1-cdse.onrender.com/api/notes/"+noteId).then((res)=>{
       console.log(res.data)
       getNotes()
     })
@@ -54,7 +54,7 @@ const App = () => {
 
       {/* Notes Card */}
   <div   className="notes-cont">
-       {notes && (notes.map((item,idx)=>{
+       {(notes.map((item,idx)=>{
       const {title,desc} = item
       return(
          
