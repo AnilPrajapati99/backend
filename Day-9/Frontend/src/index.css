@@ -34,7 +34,7 @@ form{
 .notes-card{
   min-height: 150px;
   width: 250px;
-  background-color: tomato;
+  background-color: rgb(255, 231, 227);
   color: black;
   border-radius: 8px;
   padding: 20px;
@@ -45,14 +45,16 @@ form{
   /* gap: 20px; */
  
 
+  .update{
+    background-color: rgb(157, 247, 139);
+  }
     button{
       width: fit-content;
       padding: 5px 10px;
       border: none;
       border-radius: 2px;
-      background-color: red;
+      background-color: rgb(243, 88, 88);
       font-weight: bold;
-      margin-left:auto ;
     }
 
 
@@ -65,4 +67,37 @@ form{
   flex-wrap: wrap;
   gap: 20px;
   /* flex-direction:column; */
+}
+
+.btn-cont{
+  display: flex;
+  justify-content: space-between;
+}
+
+.update-from{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+
+  form{
+     padding: 20px;
+    flex-direction: column;
+     background-color: #dd1f1f; 
+     width: 250px;
+     align-items: center;
+     border-radius: 8px;
+     gap: 20px;
+    div{
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+     width: fit-content;
+    }
+    button{
+      padding: 8px 15px;
+      border: none;
+      /* margin-bottom: 1rem; */
+    }
+  }
 }
