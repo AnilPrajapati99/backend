@@ -3,13 +3,14 @@ const ImageKit = require("@imagekit/nodejs");
 require("dotenv").config();
 
 const imagekit = new ImageKit({
-  privatekey: process.env.ImageKit_Key,
+  privateKey: process.env.ImageKit_Key,
 });
-// console.log(process.env.IMAGEKIT_PRIVATE_KEY);
+console.log(process.env.ImageKit_Key);
+
 async function postCreate(req, res) {
   console.log(req.body, req.file);
 
-  const file = await imagekit.file.upload({
+  const file = await imagekit.files.upload({
     file: await ImageKit.toFile(Buffer.from(req.file.buffer), "file"),
     fileName: "test",
   });
