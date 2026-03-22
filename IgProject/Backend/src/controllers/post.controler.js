@@ -1,38 +1,14 @@
 const postModel = require("../model/post.model");
+const likeModel = require("../model/like.model");
 const ImageKit = require("@imagekit/nodejs");
-const { json } = require("express");
-const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
 const imagekit = new ImageKit({
   privateKey: process.env.IMAGE_KIT,
 });
-console.log(process.env.IMAGE_KIT);
 
 async function postCreate(req, res) {
-  console.log(req.body, req.file);
-
-  const token = req.cookies.Token;
-
-  console.log(token);
-
-  if (!token) {
-    return res.status(401).json({
-      message: "Token not Provide, Unauthrized acess",
-    });
-  }
-
-  let decoded = null;
-
-  try {
-    decoded = jwt.verify(token, process.env.Token);
-  } catch (error) {
-    return res.status(401).json({
-      message: "User Not unAuthrised",
-    });
-  }
-
   // console.log(decoded);
 
   const file = await imagekit.files.upload({
@@ -41,12 +17,13 @@ async function postCreate(req, res) {
     folder: "cohort-2-igProject",
   });
 
+  console.log("User", req.user);
   const { caption } = req.body;
 
   const post = await postModel.create({
     caption: caption,
     imgUrl: file.url,
-    user: decoded.id,
+    user: req.user.id,
   });
 
   res.status(201).json({
@@ -56,27 +33,7 @@ async function postCreate(req, res) {
 }
 
 async function getPostControllers(req, res) {
-  const token = req.cookies.Token;
-
-  if (!token) {
-    return res.status(401).json({
-      message: "Unauthrised Access",
-    });
-  }
-
-  let decoded = null;
-
-  try {
-    decoded = jwt.verify(token, process.env.Token);
-  } catch (error) {
-    return res.status(401).json({
-      message: "Token Invalid",
-    });
-  }
-
-  console.log("Decode", decoded);
-
-  const userId = decoded.id;
+  const userId = req.user.id;
 
   const posts = await postModel.find({
     user: userId,
@@ -89,25 +46,7 @@ async function getPostControllers(req, res) {
 }
 
 async function getPostDetails(req, res) {
-  const token = req.cookies.Token;
-
-  if (!token) {
-    return res.status(401).json({
-      message: "Unauthrised Access",
-    });
-  }
-
-  let decoded;
-
-  try {
-    decoded = jwt.verify(token, process.env.Token);
-  } catch (error) {
-    return res.status(401).json({
-      message: "Unauthrised Person",
-    });
-  }
-
-  const userId = decoded.id;
+  const userId = req.user.id;
   const postId = req.params.postId;
 
   const post = await postModel.findById(postId);
@@ -132,8 +71,32 @@ async function getPostDetails(req, res) {
   });
 }
 
+async function likePostControler(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({
+      message: "Post Not Found",
+    });
+  }
+
+  const like = await likeModel.create({
+    post: postId,
+    user: username,
+  });
+
+  res.status(200).json({
+    mesage: "Post Liked Succfully",
+    like,
+  });
+}
+
 module.exports = {
   postCreate,
   getPostControllers,
   getPostDetails,
+  likePostControler,
 };

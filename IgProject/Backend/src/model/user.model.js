@@ -22,6 +22,20 @@ const userShema = new mongoose.Schema({
     type: String,
     default: "https://ik.imagekit.io/tegxajkzp/download.jfif",
   },
+  // 2000
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userdatas",
+    },
+  ],
+  // 100
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userdatas",
+    },
+  ],
 });
 
 const userModel = mongoose.model("userData", userShema);
