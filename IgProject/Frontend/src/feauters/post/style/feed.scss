@@ -1,0 +1,81 @@
+.feed-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    // background-color: #fff;
+
+    .feed{
+        max-width: 400px ;
+        width: 100%;
+    //    background-color: rgb(26, 24, 24);
+        .posts{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            // background-color: yellow;
+        }
+        .post{
+            width: 100%;
+            display: flex;
+flex-direction: column;
+gap: 0.5rem;
+            background-color: #272626;
+            padding-inline:0.5rem;
+            padding-block: 0.5rem;
+
+            img{
+                width: 100%;
+                border-radius: 0.2rem;
+            }
+
+            .user{
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                img{
+                    width: 2rem;
+                    aspect-ratio: 1/1;
+                    border-radius: 50%;
+                background-position: center;
+
+                }
+                .img-wraper{
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 2px solid rgba(255, 0, 0, 0);
+                    background: conic-gradient(rgb(236, 17, 171),rgb(243, 22, 95),rgb(241, 241, 84),rgb(233, 101, 25)) border-box;
+
+                }
+            }
+
+            .icons{
+                display: flex;
+                justify-content: space-between;
+                .left{
+                    display: flex;
+                    gap: 0.5rem;
+
+                    .like{
+                      color: red;
+                        // fill: red;
+                    }
+
+                }
+                svg{
+                    width: 1rem;
+                    aspect-ratio: 1/1;
+                    color: white;
+                }
+                button{
+                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                }
+            }
+        }
+    }
+}

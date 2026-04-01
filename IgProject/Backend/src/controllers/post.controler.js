@@ -11,13 +11,14 @@ const imagekit = new ImageKit({
 async function postCreate(req, res) {
   // console.log(decoded);
 
+  console.log(req.user);
+
   const file = await imagekit.files.upload({
     file: await ImageKit.toFile(Buffer.from(req.file.buffer), "file"),
     fileName: "test",
     folder: "cohort-2-igProject",
   });
 
-  console.log("User", req.user);
   const { caption } = req.body;
 
   const post = await postModel.create({
@@ -93,10 +94,53 @@ async function likePostControler(req, res) {
     like,
   });
 }
+async function unlikePostControler(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  const isLiked = await likeModel.findOne({
+    post: postId,
+    user: username,
+  });
+
+  if (!isLiked) {
+    return res.status(400).json({
+      message: "Post Did'nt like",
+    });
+  }
+  await likeModel.findOneAndDelete({ _id: isLiked._id });
+
+  return res.status(200).json({
+    message: "Post Unlike ",
+  });
+}
+
+async function getFeedControler(req, res) {
+  const user = req.user;
+  const posts = await Promise.all(
+    (await postModel.find().populate("user").sort({ _id: -1 }).lean()).map(
+      async (post) => {
+        const isliked = await likeModel.findOne({
+          user: user.username,
+          post: post._id,
+        });
+        post.isliked = Boolean(isliked);
+        return post;
+      },
+    ),
+  );
+
+  res.status(200).json({
+    message: "Posts Fetched Succesfully",
+    posts,
+  });
+}
 
 module.exports = {
   postCreate,
   getPostControllers,
   getPostDetails,
   likePostControler,
+  getFeedControler,
+  unlikePostControler,
 };

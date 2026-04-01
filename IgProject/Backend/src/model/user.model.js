@@ -14,6 +14,7 @@ const userShema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Password is Required"],
+    select: false,
   },
   bio: {
     type: String,
@@ -26,18 +27,18 @@ const userShema = new mongoose.Schema({
   followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "userdatas",
+      ref: "User",
     },
   ],
   // 100
   following: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "userdatas",
+      ref: "User",
     },
   ],
 });
 
-const userModel = mongoose.model("userData", userShema);
+const userModel = mongoose.model("User", userShema);
 
 module.exports = userModel;

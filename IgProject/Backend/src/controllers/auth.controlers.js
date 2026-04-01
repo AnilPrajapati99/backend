@@ -65,9 +65,11 @@ async function loginController(req, res) {
 
   // LOgin email with password username with password
 
-  const user = await userModel.findOne({
-    $or: [{ username: username }, { email: email }],
-  });
+  const user = await userModel
+    .findOne({
+      $or: [{ username: username }, { email: email }],
+    })
+    .select("+password");
 
   if (!user) {
     return res.status(404).json({
@@ -106,7 +108,23 @@ async function loginController(req, res) {
   });
 }
 
+async function getMeController(req, res) {
+  const userId = req.user.id;
+
+  const user = await userModel.findById(userId);
+
+  res.status(200).json({
+    user: {
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profileImage: user.profileImage,
+    },
+  });
+}
+
 module.exports = {
   registerController,
   loginController,
+  getMeController,
 };

@@ -5,8 +5,14 @@ const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 const identifyUser = require("../middlewares/auth.middleware");
 
-const { postCreate, getPostControllers, getPostDetails, likePostControler } =
-  postControler;
+const {
+  postCreate,
+  getPostControllers,
+  getPostDetails,
+  likePostControler,
+  getFeedControler,
+  unlikePostControler,
+} = postControler;
 
 // Post /api/post [Protected]
 postRouter.post("/", upload.single("image"), identifyUser, postCreate);
@@ -24,5 +30,10 @@ postRouter.get("/details/:postId", identifyUser, getPostDetails);
 // Like a post
 
 postRouter.post("/likes/:postId", identifyUser, likePostControler);
+postRouter.post("/unlikes/:postId", identifyUser, unlikePostControler);
+
+// GET /api/post/feed
+
+postRouter.get("/feed", identifyUser, getFeedControler);
 
 module.exports = postRouter;

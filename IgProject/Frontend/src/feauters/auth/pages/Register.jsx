@@ -1,36 +1,44 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useAuth } from '../hooks/useAuth'
+
 
 const Register = () => {
+    const {handleRegister,loding,user} = useAuth()
 
     const [username,setUsername] = useState("")
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
 
+    const navigate = useNavigate()
+
+    console.log(user)
+
+    if(loding){
+        return <main>Loading...</main>
+    }
 
     async function handleFormSubmit(e) {
         e.preventDefault()
-        axios.post("http://localhost:3000/api/auth/register",{
-            username,
-            email,
-            password
-        },{withCredentials:true}).then((res)=>{
-            console.log(res.data)
-        })
+       await handleRegister(username,email,password)
+        console.log("Register Successfuly",user)
+       navigate("/")
     }
 
-    console.log(username)
+    // useEffect(()=>{
+    //     console.log("Register Successfuly",user)
+    // },[user])
 
   return (
     <main>
             <div className="form-container">
                 <h1>Register Form</h1>
                 <form onSubmit={handleFormSubmit}>
-                    <input 
+                    <input required
                     onChange={(e)=>{setUsername(e.target.value)}}
                     type="text" name='username' placeholder='Enter Username' />
-                    <input
+                    <input required
                     onChange={(e)=>{setEmail(e.target.value)}}
                     
                     type="text" name='email' placeholder='Enter Email' />
