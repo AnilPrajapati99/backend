@@ -1,12 +1,15 @@
-import { useState } from 'react'
-
-import './App.css'
+import router from './App.routes'
 import FaceExpression from './feauters/expression/components/FaceExpressions'
-
+import { RouterProvider} from "react-router-dom"
+import "./feauters/shared/styles/global.scss"
+import { AuthProvider } from './feauters/auth/Auth.context'
 function App() {
 
   return (
-  <FaceExpression/>
+    <AuthProvider> 
+    <RouterProvider router={router} />
+    </AuthProvider>
+
   )
 }
 
