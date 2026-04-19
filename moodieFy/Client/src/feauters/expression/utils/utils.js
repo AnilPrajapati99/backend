@@ -64,14 +64,14 @@ export const detect = ({
 
     console.log(frownLeft, frownRight);
 
-    let currentExpression = "Neutral 😐";
+    let currentExpression = "Neutral ";
 
     if (smileLeft > 0.4 && smileRight > 0.4) {
-      currentExpression = "Happy 😄";
+      currentExpression = "happy";
     } else if (jawOpen > 0.006 && browUp > 0.006) {
-      currentExpression = "Surprised 😲";
+      currentExpression = "surprised";
     } else if (frownLeft > 0.2 && frownRight > 0.2) {
-      currentExpression = "Sad 😢";
+      currentExpression = "sad";
     }
 
     // 👉 Prevent re-render spam
@@ -79,6 +79,7 @@ export const detect = ({
       lastExpressionRef.current = currentExpression;
       setExpression(currentExpression);
     }
+    return currentExpression;
   }
 
   //   animationRef.current = requestAnimationFrame(detect);

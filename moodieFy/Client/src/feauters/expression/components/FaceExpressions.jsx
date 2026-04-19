@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { detect,init } from "../utils/utils";
 
 
-export default function FaceExpression() {
+export default function FaceExpression({onClick=()=>{}}) {
   const videoRef = useRef(null);
   const landmarkerRef = useRef(null);
 
@@ -25,6 +25,12 @@ const streamRef = useRef()
     };
   }, []);
 
+async function handleClick() {
+ const expression =  detect({landmarkerRef,videoRef,setExpression,lastTimeRef,lastExpressionRef})
+ console.log(expression)
+ onClick(expression)
+}
+
   return (
     <div style={{ textAlign: "center" }}>
       <video
@@ -34,7 +40,7 @@ const streamRef = useRef()
       />
       <h2>{expression}</h2>
       <button onClick={init}>Open Camera</button>
-      <button onClick={()=>{detect({landmarkerRef,videoRef,setExpression,lastTimeRef,lastExpressionRef})}}>Detect Expression</button>
+      <button onClick={handleClick}>Detect Expression</button>
     </div>
   );
 }

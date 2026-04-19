@@ -1,6 +1,5 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import authRouter from "./routes/auth.routes.js";
 import cors from "cors";
 
 const app = express();
@@ -13,6 +12,12 @@ app.use(
   }),
 );
 
+// Routes
+
+import authRouter from "./routes/auth.routes.js";
 app.use("/api/auth", authRouter);
+
+import router from "./routes/song.routes.js";
+app.use("/api/songs", router);
 
 export default app;
