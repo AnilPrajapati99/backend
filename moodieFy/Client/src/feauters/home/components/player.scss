@@ -2,13 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // min-height: 100vh;
+  // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
 }
 
 .player-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(180deg, rgba(105, 85, 85, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 15px;
@@ -94,11 +94,15 @@
 
   .song-mood {
     font-size: 11px;
-    opacity: 0.7;
+    border-radius: 5px;
+    width: fit-content;
+    padding: 3px 10px;
+    // opacity: 0.7;
     margin: 0;
     text-transform: capitalize;
     font-weight: 500;
     letter-spacing: 0.3px;
+    background-color:#EC2550 ;
   }
 }
 
@@ -170,7 +174,7 @@
 // Controls Section
 .controls-section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 6px;
 }
 
@@ -180,13 +184,13 @@
   align-items: center;
   justify-content: flex-start;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #EC2550;
   padding: 5px 8px;
   border-radius: 6px;
   width: fit-content;
 
   label {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     opacity: 0.9;
     white-space: nowrap;
@@ -215,7 +219,7 @@
     }
 
     option {
-      background: #667eea;
+      background: #EC2550;
       color: white;
     }
   }
@@ -233,17 +237,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 10px;
+  // padding: 6px 10px;
   border: none;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: none;
+  // color: white;
   font-size: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  // border: 1px solid rgba(255, 255, 255, 0.3);
   white-space: nowrap;
+  color: white;
 
   span {
     display: flex;
@@ -253,10 +258,10 @@
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    // background: rgba(255, 255, 255, 0.3);
+    // border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   &:active {
@@ -265,14 +270,12 @@
 }
 
 .play-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   padding: 7px 12px;
   font-size: 14px;
 
-  &:hover {
-    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
-  }
+
 
   &.playing span {
     animation: bounce 0.6s infinite;

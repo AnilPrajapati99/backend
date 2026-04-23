@@ -69,7 +69,7 @@ export const detect = ({
     if (smileLeft > 0.4 && smileRight > 0.4) {
       currentExpression = "happy";
     } else if (jawOpen > 0.006 && browUp > 0.006) {
-      currentExpression = "surprised";
+      currentExpression = "suprised";
     } else if (frownLeft > 0.2 && frownRight > 0.2) {
       currentExpression = "sad";
     }

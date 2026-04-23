@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { detect,init } from "../utils/utils";
+import { useSong } from "../../home/hooks/useSong";
 
 
 export default function FaceExpression({onClick=()=>{}}) {
+  const {setMood} =  useSong()
   const videoRef = useRef(null);
   const landmarkerRef = useRef(null);
 
@@ -29,6 +31,7 @@ async function handleClick() {
  const expression =  detect({landmarkerRef,videoRef,setExpression,lastTimeRef,lastExpressionRef})
  console.log(expression)
  onClick(expression)
+ setMood(expression)
 }
 
   return (
@@ -39,8 +42,10 @@ async function handleClick() {
         playsInline
       />
       <h2>{expression}</h2>
-      <button onClick={init}>Open Camera</button>
-      <button onClick={handleClick}>Detect Expression</button>
+      <div className="btn-container">
+        <button className="button" onClick={init}>Open Camera</button>
+      <button className="button" onClick={handleClick}>Detect Expression</button>
+      </div>
     </div>
   );
 }

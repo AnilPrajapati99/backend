@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { SongContext } from '../Song.context'
 import {useSong} from '../hooks/useSong'
+import { RiPlayFill, RiPauseFill, RiReplay10Line, RiForward10Line } from "react-icons/ri";
+
+
 import './player.scss'
 
 const Player = () => {
@@ -10,6 +13,8 @@ const Player = () => {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [speed, setSpeed] = useState(1)
+
+  const {currentSong} = useContext(SongContext)
 
   useEffect(() => {
     const audio = audioRef.current
@@ -30,16 +35,17 @@ const Player = () => {
     }
   }, [])
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause()
-      } else {
-        audioRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
+ const togglePlay = () => {
+  if (!audioRef.current) return;
+
+  if (isPlaying) {
+    audioRef.current.pause();
+  } else {
+    audioRef.current.play();
   }
+
+  setIsPlaying(prev => !prev); // better
+};
 
   const handleBackward = () => {
     if (audioRef.current) {
@@ -91,7 +97,7 @@ const Player = () => {
         <div className='player-content'>
           {/* Song Info */}
           <div className='song-info'>
-            <h2 className='song-title'>{song?.title || 'No song playing'}</h2>
+            <h2 className='song-title'>{song?.title.slice(0,30)+". mp3" || 'No song playing'}</h2>
             <p className='song-mood'>{song?.mood || 'unknown'}</p>
           </div>
 
@@ -120,7 +126,7 @@ const Player = () => {
                 onClick={handleBackward}
                 title='Skip backward 10 seconds'
               >
-                <span>⏪ -10s</span>
+                <span><RiReplay10Line size={20} style={{color:"white"}} /></span>
               </button>
 
               <button
@@ -128,7 +134,7 @@ const Player = () => {
                 onClick={togglePlay}
                 title={isPlaying ? 'Pause' : 'Play'}
               >
-                <span>{isPlaying ? '⏸' : '▶'}</span>
+                <span>{isPlaying ? <RiPauseFill size={20} style={{color:"white"}}/> : <RiPlayFill size={20} style={{color:"white"}} />}</span>
               </button>
 
               <button
@@ -136,8 +142,9 @@ const Player = () => {
                 onClick={handleForward}
                 title='Skip forward 10 seconds'
               >
-                <span>+10s ⏩</span>
+                <span><RiForward10Line size={20} style={{color:"white"}} /></span>
               </button>
+
             </div>
 
             {/* Speed Control */}

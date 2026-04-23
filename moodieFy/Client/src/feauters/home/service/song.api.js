@@ -6,8 +6,15 @@ const api = axios.create({
 });
 
 export async function getSong({ mood }) {
-  console.log(mood);
   const responce = await api.get("/get?mood=" + mood);
   console.log(responce);
+  return responce.data;
+}
+
+export async function getAllSong({ mood }) {
+  const url = mood ? `/getAll?mood=${mood}` : "/getAll";
+  const responce = await (mood
+    ? api.get(url)
+    : api.get(url));
   return responce.data;
 }

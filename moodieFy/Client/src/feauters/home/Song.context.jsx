@@ -14,9 +14,12 @@ const [song, setsong] = useState(
 )
 
 const [loading, setloading] = useState(false)
+const [ playlist , setPlaylist] = useState([])
+const [mood, setMood] = useState("")
+const [currentSong,setCorrentSong] = useState(null)
 
     return (
-        <SongContext.Provider value={{song,setloading,setsong,loading}}>
+        <SongContext.Provider value={{song,currentSong,setCorrentSong,setMood,mood,playlist,setPlaylist,setloading,setsong,loading}}>
             {children}
         </SongContext.Provider>
     )

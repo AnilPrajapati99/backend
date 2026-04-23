@@ -46,14 +46,58 @@ async function uploadSong(req, res) {
 }
 
 export async function getSong(req, res) {
+  try {
+    const { mood } = req.query;
+
+    // 👇 dynamic match
+    const matchStage = mood ? { mood } : {};
+
+    const songs = await songModel.aggregate([
+      { $match: matchStage },
+      { $sample: { size: 1 } },
+    ]);
+
+    const song = songs[0];
+
+    if (!song) {
+      return res.status(404).json({
+        message: "No song found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Song Fetched Successfully",
+      song,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getAllSong(req, res) {
   const { mood } = req.query;
 
-  const song = await songModel.findOne({ mood });
+  try {
+    if (mood) {
+      const songs = await songModel.find({ mood });
+      return res.status(200).json({
+        message: "Song Fetched Successfully",
+        allSong: songs,
+      });
+    }
+    const allSong = await songModel.find();
 
-  res.status(200).json({
-    message: "Song Fetched Successfully",
-    song,
-  });
+    res.status(200).json({
+      message: "All Song Fetched Succesfully",
+      allSong,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 }
 
 export default uploadSong;
