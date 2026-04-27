@@ -36,5 +36,6 @@ export const useSong = () => {
     setPlaylist,
     handleAllSongs,
     setMood,
+    mood,
   };
 };

@@ -74,6 +74,8 @@ export const detect = ({
       currentExpression = "sad";
     }
 
+    console.log(frownLeft, frownRight);
+
     // 👉 Prevent re-render spam
     if (lastExpressionRef.current !== currentExpression) {
       lastExpressionRef.current = currentExpression;

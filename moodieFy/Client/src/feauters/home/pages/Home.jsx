@@ -3,6 +3,7 @@ import FaceExpression from '../../expression/components/FaceExpressions'
 import Player from '../components/Player'
 import { useSong } from '../hooks/useSong'
 import Playlists from '../components/Playlists'
+import Expresion from '../../expression/components/Expresion'
 
 const Home = () => {
   const {handleGetSong,handleAllSongs} = useSong()

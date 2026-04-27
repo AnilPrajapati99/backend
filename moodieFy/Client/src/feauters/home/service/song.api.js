@@ -6,15 +6,22 @@ const api = axios.create({
 });
 
 export async function getSong({ mood }) {
-  const responce = await api.get("/get?mood=" + mood);
-  console.log(responce);
-  return responce.data;
+  try {
+    const response = await api.get("/get", {
+      params: mood ? { mood } : {},
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching song:", error);
+    throw error;
+  }
 }
 
 export async function getAllSong({ mood }) {
   const url = mood ? `/getAll?mood=${mood}` : "/getAll";
-  const responce = await (mood
-    ? api.get(url)
-    : api.get(url));
-  return responce.data;
+
+  const response = await api.get(url);
+
+  return response.data;
 }

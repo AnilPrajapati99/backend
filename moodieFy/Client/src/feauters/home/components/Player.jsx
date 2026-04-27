@@ -7,20 +7,41 @@ import { RiPlayFill, RiPauseFill, RiReplay10Line, RiForward10Line } from "react-
 import './player.scss'
 
 const Player = () => {
-  const { song } = useSong()
+  const { song,mood } = useSong()
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
+  // const [currentTime, setCurrentTime] = useState(0)
+  const progressRef = useRef(null);
+  const [uiTime, setUiTime] = useState(0);
   const [duration, setDuration] = useState(0)
   const [speed, setSpeed] = useState(1)
+  const {currentSong,setfuntion,songUrl} = useContext(SongContext)
+const currentTimeRef = useRef(0);
 
-  const {currentSong} = useContext(SongContext)
+const updateTime = () => {
+  const audio = audioRef.current;
+  if (!audio || !progressRef.current) return;
+
+  const time = audio.currentTime;
+
+  currentTimeRef.current = time;      // 🔥 IMPORTANT
+  progressRef.current.value = time;   // slider update
+};
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setUiTime(currentTimeRef.current);
+  }, 200);
+
+  return () => clearInterval(interval);
+}, []);
+
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
 
-    const updateTime = () => setCurrentTime(audio.currentTime)
+    // const updateTime = () => setCurrentTime(audio.currentTime)
     const updateDuration = () => setDuration(audio.duration)
     const handleEnded = () => setIsPlaying(false)
 
@@ -34,6 +55,43 @@ const Player = () => {
       audio.removeEventListener('ended', handleEnded)
     }
   }, [])
+
+useEffect(() => {
+  if (!audioRef.current || !songUrl) return;
+
+  const audio = audioRef.current;
+
+  // Stop current song
+  audio.pause();
+
+  // Change song
+  audio.src = songUrl;
+
+  // Wait until audio is ready
+  const handleCanPlay = () => {
+    audio.play()
+      .then(() => {
+        setIsPlaying(true);
+      })
+      .catch((err) => {
+        console.log("Autoplay blocked:", err);
+        setIsPlaying(false);
+      });
+  };
+
+  audio.addEventListener("canplay", handleCanPlay);
+
+  audio.load();
+
+  return () => {
+    audio.removeEventListener("canplay", handleCanPlay);
+  };
+
+}, [songUrl, mood]);
+
+useEffect(() => {
+  console.log("rendered once on mount");
+}, []);
 
  const togglePlay = () => {
   if (!audioRef.current) return;
@@ -68,12 +126,12 @@ const Player = () => {
   }
 
   const handleProgressChange = (e) => {
-    const newTime = parseFloat(e.target.value)
-    setCurrentTime(newTime)
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime
-    }
+  const newTime = parseFloat(e.target.value);
+
+  if (audioRef.current) {
+    audioRef.current.currentTime = newTime; // 🔥 actual seek
   }
+};
 
   const formatTime = (time) => {
     if (isNaN(time)) return '0:00'
@@ -84,7 +142,7 @@ const Player = () => {
 
   return (
     <div className='player-container'>
-      <audio ref={audioRef} src={song?.url} />
+      <audio ref={audioRef} src={song?.url || songUrl} />
       
       <div className='player-card'>
         {/* Song Poster */}
@@ -107,12 +165,13 @@ const Player = () => {
               type='range'
               min='0'
               max={duration || 0}
-              value={currentTime}
+             value={uiTime}
+              ref={progressRef}
               onChange={handleProgressChange}
               className='progress-bar'
             />
             <div className='time-display'>
-              <span className='current-time'>{formatTime(currentTime)}</span>
+              <span className='current-time'>{formatTime(uiTime)}</span>
               <span className='duration'>{formatTime(duration)}</span>
             </div>
           </div>

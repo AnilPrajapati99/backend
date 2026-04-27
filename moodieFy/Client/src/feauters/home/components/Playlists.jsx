@@ -6,7 +6,7 @@ import { SongContext } from '../Song.context'
 
 const Playlists = () => {
     const {loading,playlist,handleAllSongs} = useSong()
-    const {mood,setsong} = useContext(SongContext)
+    const {mood,setsong,setSongUrl} = useContext(SongContext)
 
   useEffect(() => {
   if (mood !== undefined) {
@@ -14,9 +14,11 @@ const Playlists = () => {
   }
 }, [mood]);
 
-const handleSongs = (song) => {
-setsong(song)
+const handlePlay = (song) => {
+  setsong(song)
+  setSongUrl(song.url)
 }
+
 
   return (
     
@@ -26,7 +28,7 @@ setsong(song)
         <p>Loading...</p>
       ) : (
         playlist.map((song, index) => (
-          <div key={index} className='playlist-card' onClick={()=>handleSongs(song)}>
+          <div key={index} className='playlist-card' onClick={()=>handlePlay(song)}>
             <img src={song.posterUrl} alt={song.title} className='poster' />
             <div className='card-content'>
               <h3 className='title'>{song.title}</h3>
