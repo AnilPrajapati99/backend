@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { handleRegister } from "../controlers/user.controlers.js";
+import { handleLogin, handleRegister } from "../controlers/user.controlers.js";
 const authRouter = Router();
 
 // Start authRouter
 
 authRouter.post("/register", handleRegister);
+authRouter.post("/login", handleLogin);
 
 export default authRouter;
