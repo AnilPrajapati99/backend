@@ -1,21 +1,27 @@
 import express from "express";
-import authRouter from "./Routes/auth.routes.js";
-import cookie from "cookie-parser";
-import morgan from "morgan";
-
 const app = express();
 
-// middleware
 app.use(express.json());
-app.use(cookie());
-app.use(morgan("dev"));
-
-//Api Routes
-
-app.use("/api/auth", authRouter);
 
 app.get("/", (req, res) => {
-  res.send("Home");
+  res.send(names);
 });
+
+const names = ["Anil", "lion", "Tiger"];
+
+app.post("/data", (req, res) => {
+  const { name } = req.body;
+  names.push(name);
+
+  res.status(200).json({
+    message: "Done Push",
+    data: names,
+  });
+});
+
+// Auth Routes prefix
+import authRouter from "./Routes/authRoutes.js";
+
+app.use("/api/auth", authRouter);
 
 export default app;

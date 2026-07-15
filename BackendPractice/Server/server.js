@@ -1,11 +1,11 @@
 import "dotenv/config";
 import app from "./src/app.js";
-import { connectToDb } from "./src/config/db.js";
+import { connectTodb } from "./src/config/db.js";
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
-connectToDb();
+connectTodb();
 
 app.listen(PORT, () => {
-  console.log("Serevr is Running " + PORT);
+  console.log("Server is Listning", PORT);
 });
