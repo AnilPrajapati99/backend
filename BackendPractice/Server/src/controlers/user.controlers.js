@@ -1,6 +1,18 @@
 import userModel from "../model/user.model.js";
 import jwt, { decode } from "jsonwebtoken";
 
+const genrateAcessToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_ACCESS_TOKEN, {
+    expiresIn: "15m",
+  });
+};
+
+const generateREfreshToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_REFRESH_TOKEN, {
+    expiresIn: "7d",
+  });
+};
+
 export const handleRegister = async (req, res) => {
   const { name, age, add, email, password } = req.body;
 
@@ -41,6 +53,8 @@ export const handleLogin = async (req, res) => {
   try {
     const user = await userModel.findOne({ email }).select("+password");
 
+    console.log(user);
+
     if (!user) {
       return res.status(400).json({
         message: "PLese Register ",
@@ -48,6 +62,7 @@ export const handleLogin = async (req, res) => {
     }
 
     const isMatch = await user.comparePassword(password);
+    console.log(isMatch);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -55,26 +70,81 @@ export const handleLogin = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const accessToken = genrateAcessToken(user._id);
+    const refreshToken = generateREfreshToken(user._id);
 
-    res.cookie("token", token, {
+    console.log("accessToken", accessToken);
+    console.log("refreshToken", refreshToken);
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000, //15 min
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, //15 min
     });
 
     res.status(200).json({
       message: "Login succesfully",
       data: {
         name: user.name,
-        token: token,
+        email: user.email,
       },
     });
   } catch (error) {
     return res.status(400).json({
-      message: error.message,
+      message: error,
+    });
+  }
+};
+
+export const handleRefreshToken = async (req, res) => {
+  const { refreshToken } = req.cookies;
+  console.log(refreshToken);
+
+  if (!refreshToken) {
+    return res.status(401).json({
+      message: "Refresh token not found , please login",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN);
+
+    console.log(decoded);
+
+    const user = await userModel.findById(decoded.id).select("+refreshToken");
+
+    if (!user || user.refreshToken !== refreshToken) {
+      return res.status(401).json({
+        message: "Invalid Rfresh Token",
+      });
+    }
+
+    const newAccessToken = genrateAcessToken(user._id);
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      message: "accessToken REfreshed",
+      data: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(403).json({
+      message: "Invalid or Expired Refresh Token Please Login",
     });
   }
 };
@@ -104,13 +174,16 @@ export const handleGetme = async (req, res) => {
 };
 
 export const handleLogOut = async (req, res) => {
-  const { token } = req.cookies;
-  if (!token) {
-    return res.status(400).json({
-      message: "Toekn Not Provided",
-    });
+  const { refreshToken } = req.cookies;
+
+  if (refreshToken) {
+    const decoded = decode(refreshToken);
+    if (decode?.id) {
+      await userModel.findByIdAndUpdate(decoded.id, { refreshToken: null });
+    }
   }
-  res.clearCookie("token");
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
 
   res.send("LogOut succesfully");
 };

@@ -16,8 +16,12 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    minlength: [8, "must be 8 Character Require"],
-    maxlength: [12, "mAximum 12 Character"],
+    required: true,
+    select: false,
+  },
+  refreshToken: {
+    type: String,
+    default: null,
     select: false,
   },
 });

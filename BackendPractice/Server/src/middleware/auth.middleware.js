@@ -1,15 +1,15 @@
-import { decode } from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 
 export const authUser = async (req, res, next) => {
-  const { token } = req.cookies;
-  console.log(token);
+  const { accessToken } = req.cookies;
+  console.log(accessToken);
   try {
-    if (!token) {
+    if (!accessToken) {
       return res.status(400).json({
         message: "Token Not Provide",
       });
     }
-    const decoded = decode(token);
+    const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN);
     req.user = decoded.id;
     next();
   } catch (error) {

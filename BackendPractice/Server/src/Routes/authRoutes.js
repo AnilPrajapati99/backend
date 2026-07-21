@@ -4,6 +4,7 @@ import {
   handleGetme,
   handleLogin,
   handleLogOut,
+  handleRefreshToken,
   handleRegister,
   handleUpdate,
 } from "../controlers/user.controlers.js";
@@ -14,6 +15,7 @@ const authRouter = Router();
 
 authRouter.post("/register", handleRegister);
 authRouter.post("/login", handleLogin);
+authRouter.post("/refresh-token", handleRefreshToken);
 authRouter.get("/get-me", authUser, handleGetme);
 authRouter.post("/logOut", handleLogOut);
 authRouter.put("/allUpdate/:id", authUser, handleAllDataUpdate);
